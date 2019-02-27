@@ -203,16 +203,20 @@ exports.playCmd = rl => {
         let quiz = questionStack.pop();
         let qsnt = quiz.question;
         let answ = quiz.answer;
+        let aciertos = 0;
 
         rl.question(colorize(qsnt + ':\n', 'blue'), userAnsw => {
             if(userAnsw === answ){
+                aciertos+=1;
                 log(colorize('Correcto', 'green'));
             }else{
                 log(colorize('incorrect', 'red'));
+                log(colorize(`aciertos: ${aciertos}`));
                 log(colorize('fin', 'red'));
                 continuee = false;
                 rl.prompt();
             }
+            log(colorize(`aciertos: ${aciertos}`));
         })
     }
 };
