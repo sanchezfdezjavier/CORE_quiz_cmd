@@ -151,7 +151,24 @@ exports.editCmd = (rl, id) => {
  * @param id Clave del quiz a probar.
  */
 exports.testCmd = (rl, id) => {
-    log('Probar el quiz indicado.', 'red');
+    //Checking id
+    if(id === undefined || id === '' || id<0 || id > model.getAll().length ){
+        log(colorize('Error: Id no válido', 'red'));
+    }else{
+        //Getting data
+        let element = model.getByIndex(id);
+        let qstn = element.question;
+        let answer = element.answer;
+
+        //User input
+        rl.question(colorize(qstn + ': \n ', 'blue'), userAnsw => {
+            if(userAnsw === answer){
+                log(colorize('Correcto', 'green'));
+            }else{
+                log(colorize('Incorrecto', 'red'));
+            }
+        })
+    }
     rl.prompt();
 };
 
@@ -175,8 +192,7 @@ exports.playCmd = rl => {
  */
 exports.creditsCmd = rl => {
     log('Autores de la práctica:');
-    log('Nombre 1', 'green');
-    log('Nombre 2', 'green');
+    log('Javier Sánchez Fernández', 'green');
     rl.prompt();
 };
 
