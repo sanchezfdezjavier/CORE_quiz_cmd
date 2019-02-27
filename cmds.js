@@ -179,9 +179,47 @@ exports.testCmd = (rl, id) => {
  *
  * @param rl Objeto readline usado para implementar el CLI.
  */
+
+//Auxiliar play function
+ function shuffle(a) {
+    var j, x, i;
+    for (i = a.length - 1; i > 0; i--) {
+        j = Math.floor(Math.random() * (i + 1));
+        x = a[i];
+        a[i] = a[j];
+        a[j] = x;
+    }
+    return a;
+}
+
+let loop = require('node-while-loop');
+
 exports.playCmd = rl => {
-    log('Jugar.', 'red');
-    rl.prompt();
+    //Getting and shuffle data
+    let questionStack = shuffle(model.getAll());
+    let continuee = true;
+    log('arrived1'); //arrival checker
+    
+    loop.while(()=> {
+        return (questionStack.length !== 0 && continuee);
+    }, ()=> {
+        let auxQuizz = questionStack.pop();
+        let auxQsnt = auxQuizz.question;
+        let auxAnsw = auxQuizz.answer;
+        let userAnsw = '';
+        //User input
+        rl.question(colorize(auxQsnt + ': \n ', 'blue'), aux => {
+           userAnsw = aux;
+        })
+        
+        if(userAnsw === auxAnsw){
+           log(colorize('Correcto', 'green'));
+        }else{
+           log(colorize('Incorrecto', 'red'));
+        }
+        rl.prompt();
+    });
+    
 };
 
 
