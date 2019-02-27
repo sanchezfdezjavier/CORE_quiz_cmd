@@ -192,34 +192,29 @@ exports.testCmd = (rl, id) => {
     return a;
 }
 
-let loop = require('node-while-loop');
-
 exports.playCmd = rl => {
     //Getting and shuffle data
     let questionStack = shuffle(model.getAll());
+    //While finisher
     let continuee = true;
-    log('arrived1'); //arrival checker
-    
-    loop.while(()=> {
-        return (questionStack.length !== 0 && continuee);
-    }, ()=> {
-        let auxQuizz = questionStack.pop();
-        let auxQsnt = auxQuizz.question;
-        let auxAnsw = auxQuizz.answer;
-        let userAnsw = '';
-        //User input
-        rl.question(colorize(auxQsnt + ': \n ', 'blue'), aux => {
-           userAnsw = aux;
+    let conter = 0;
+
+    while(continuee && questionStack.length !== 0){
+        let quiz = questionStack.pop();
+        let qsnt = quiz.question;
+        let answ = quiz.answer;
+
+        rl.question(colorize(qsnt + ':\n', 'blue'), userAnsw => {
+            if(userAnsw === answ){
+                log(colorize('Correcto', 'green'));
+            }else{
+                log(colorize('incorrect', 'red'));
+                log(colorize('fin', 'red'));
+                continuee = false;
+                rl.prompt();
+            }
         })
-        
-        if(userAnsw === auxAnsw){
-           log(colorize('Correcto', 'green'));
-        }else{
-           log(colorize('Incorrecto', 'red'));
-        }
-        rl.prompt();
-    });
-    
+    }
 };
 
 
